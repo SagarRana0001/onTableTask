@@ -1,34 +1,30 @@
 import React, { useState } from "react";
 import {
-  EditAction,
-  DltAction,
   Container,
   MainDiv,
   SubmitBtn,
   TodoHeader,
   TableMainDiv,
   FormMainDiv,
-  Td,
-  Tr,
-  Trrow,
 } from "./addTask";
-import { TextField } from "@mui/material";
+import { Card, Paper, TextField } from "@mui/material";
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TableHead } from "../constand/constained.js";
+
+import { Tablerow } from "../listing/table.jsx";
 const initalValues = {
   task: "",
   status: "",
   deadline: dayjs("2022-04-17T15:30"),
 };
-
 export const ReactForm = (e) => {
   const [isEdit, setIsEdit] = useState(false);
   const [value, setValue] = useState(initalValues);
-
+  // const [valueDate, setValueDate] = React.useState(dayjs("2022-04-17T15:30"));
   const [finalstore, setfinalstore] = useState([]);
 
   const formState = (e) => {
@@ -54,101 +50,98 @@ export const ReactForm = (e) => {
       setValue(initalValues);
     }
   };
-  const editBtn = (editvalue, ind) => {
-    setIsEdit(true);
-    setValue({ ...editvalue });
-  };
 
-  const dltBtn = (ind) => {
-    const dltRow = finalstore.filter((element, index) => index !== ind);
+  const deletefunc = (ind) => {
+    const dltRow = finalstore.filter((element, index) => element.id != ind);
     setfinalstore(dltRow);
   };
   return (
     <>
       <Container>
-        <TableMainDiv>
-          <MainDiv>
-            <div>
-              <TodoHeader> Todo List</TodoHeader>
-            </div>
-            <table>
-              <Tr>
-                <tr>
-                  {TableHead.map((curr, index) => (
-                    <>
+        <Paper sx={{ width: "68%" }}>
+          <TableMainDiv>
+            <MainDiv>
+              <div>
+                <TodoHeader> Todo List</TodoHeader>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    {TableHead?.map((curr, index) => (
                       <th>{curr.thead}</th>
-                    </>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {finalstore?.map((curr, index) => (
+                    <Tablerow
+                      curr={curr}
+                      id={curr.id}
+                      index={index}
+                      deletefunc={deletefunc}
+                      formState={formState}
+                      value={value}
+                      setValue={setValue}
+                      // valueDate={valueDate}
+                      // setValueDate={setValueDate}
+                      finalstore={finalstore}
+                      setfinalstore={setfinalstore}
+                    />
                   ))}
-                </tr>
-              </Tr>
-              <tbody>
-                {finalstore?.map((curr, index) => (
-                  <Trrow>
-                    <td>{index + 1}</td>
-                    <td>{curr.task}</td>
-                    <td>{curr.status}</td>
-                    {/* <td>{curr.deadline}</td> */}
+                </tbody>
+              </table>
+            </MainDiv>
+          </TableMainDiv>
+        </Paper>
 
-                    <Td>
-                      <EditAction onClick={() => editBtn(curr, index)}>
-                        Edit
-                      </EditAction>
-
-                      <DltAction onClick={() => dltBtn(index)}>
-                        Delete
-                      </DltAction>
-                    </Td>
-                  </Trrow>
-                ))}
-              </tbody>
-            </table>
-          </MainDiv>
-        </TableMainDiv>
-        <FormMainDiv>
-          <form>
-            <label>Task</label>
-            <MainDiv>
-              <TextField
-                name={"task"}
-                label={"Task"}
-                placeholder={"Plase Enter your Task"}
-                type={"text"}
-                onChange={(e) => formState(e)}
-                value={value.task || ""}
-              />
-            </MainDiv>
-            <label>Status</label>
-            <MainDiv>
-              <TextField
-                name={"status"}
-                placeholder={"Plase Enter your status"}
-                type={"text"}
-                onChange={(e) => formState(e)}
-                value={value.status || ""}
-              />
-            </MainDiv>
-            {/* <label>Deadline</label> */}
-            <MainDiv>
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer
-                  components={["DateTimePicker", "DateTimePicker"]}
-                >
-                  <DateTimePicker
-                    name="deadline"
-                    defaultValue={dayjs("2022-04-17T15:30")}
-                    onChange={(e) => formState(e)}
-                    value={value.name || ""}
-                  />
-                </DemoContainer>
-              </LocalizationProvider> */}
-            </MainDiv>
-            <MainDiv>
-              <SubmitBtn onClick={formsubmit}>
-                {isEdit ? "Save" : "Add Task"}
-              </SubmitBtn>
-            </MainDiv>
-          </form>
-        </FormMainDiv>
+        <Card sx={{ width: "30%" }}>
+          <FormMainDiv>
+            <form>
+              <label>Task</label>
+              <MainDiv>
+                <TextField
+                  name={"task"}
+                  placeholder={"Plase Enter your Task"}
+                  type={"text"}
+                  onChange={(e) => formState(e)}
+                  value={value.task || ""}
+                />
+              </MainDiv>
+              <label>Status</label>
+              <MainDiv>
+                <TextField
+                  name={"status"}
+                  placeholder={"Plase Enter your status"}
+                  type={"text"}
+                  onChange={(e) => formState(e)}
+                  value={value.status || ""}
+                />
+              </MainDiv>
+              {/* <label>Deadline</label>
+              <MainDiv>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["DateTimePicker", "DateTimePicker"]}
+                  >
+                    <DateTimePicker
+                    // name="deadline"
+                    // defaultValue={dayjs("2022-04-17T15:30")}
+                    // value={valueDate}
+                    // onChange={(newValue) => setValueDate(newValue)}
+                    // onChange={(e) => formState(e)}
+                    // value={value.name || ""}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </MainDiv> */}
+              <MainDiv>
+                <SubmitBtn onClick={formsubmit}>
+                  {isEdit ? "Save" : "Add Task"}
+                </SubmitBtn>
+              </MainDiv>
+            </form>
+          </FormMainDiv>
+        </Card>
       </Container>
     </>
   );
