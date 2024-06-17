@@ -18,7 +18,7 @@ export const Tablerow = (props) => {
 
   useEffect(() => {
     setRoCurrent(props.curr);
-  }, [props.alldata]);
+  }, [props.finalstore]);
 
   const changeValue = (e) => {
     const { name, value } = e.target;
@@ -26,13 +26,25 @@ export const Tablerow = (props) => {
   };
   const saveFunc = (indx) => {
     setEdit(false);
-    props.setfinalstore([rowCurrent]);
+    let data = props.finalstore.map((ele) => {
+      if (ele.id == rowCurrent.id) {
+        return rowCurrent;
+      } else {
+        return ele;
+      }
+    });
+    props.setfinalstore([...data]);
   };
   const clcFunc = (indx) => {
     setEdit(false);
     setRoCurrent(props.curr);
   };
-  console.log(rowCurrent.deadline);
+  const deletefunc = (ind) => {
+    const dltRow = props.finalstore.filter(
+      (element, index) => element.id != ind
+    );
+    props.setfinalstore([...dltRow]);
+  };
   return (
     <>
       <Trrow>
@@ -90,7 +102,7 @@ export const Tablerow = (props) => {
           {edit ? (
             <BtnAction onClick={() => clcFunc(props.index)}>Cancel</BtnAction>
           ) : (
-            <DltAction onClick={() => props.deletefunc(props.curr.id)}>
+            <DltAction onClick={() => deletefunc(props.curr.id)}>
               Delete
             </DltAction>
           )}

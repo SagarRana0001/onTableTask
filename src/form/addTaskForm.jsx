@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   MainDiv,
@@ -26,35 +26,19 @@ export const ReactForm = (e) => {
   const [value, setValue] = useState(initalValues);
   // const [valueDate, setValueDate] = React.useState(dayjs("2022-04-17T15:30"));
   const [finalstore, setfinalstore] = useState([]);
-
   const formState = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
   const formsubmit = (e) => {
     e.preventDefault();
 
-    let x = finalstore.map((curr, indx) => {
-      if (curr.id == value.id) {
-        return value;
-      } else {
-        return curr;
-      }
-    });
-
-    if (isEdit) {
-      setfinalstore(x);
-    } else {
-      let id = finalstore.length + 1;
-      const finalValue = { ...value, id };
-      setfinalstore([...finalstore, finalValue]);
-      setValue(initalValues);
-    }
+    let id = finalstore.length + 1;
+    const finalValue = { ...value, id };
+    setfinalstore([...finalstore, finalValue]);
+    setValue(initalValues);
+    // }
   };
 
-  const deletefunc = (ind) => {
-    const dltRow = finalstore.filter((element, index) => element.id != ind);
-    setfinalstore(dltRow);
-  };
   return (
     <>
       <Container>
@@ -78,7 +62,6 @@ export const ReactForm = (e) => {
                       curr={curr}
                       id={curr.id}
                       index={index}
-                      deletefunc={deletefunc}
                       formState={formState}
                       value={value}
                       setValue={setValue}
